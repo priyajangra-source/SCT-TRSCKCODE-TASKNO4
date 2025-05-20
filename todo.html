@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Enhanced To-Do List App</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      justify-content: center;
+      padding: 40px 10px;
+      min-height: 100vh;
+      margin: 0;
+      color: #fff;
+    }
+
+    .todo-container {
+      background: #1f2937;
+      padding: 30px 40px;
+      border-radius: 15px;
+      width: 100%;
+      max-width: 700px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #ffd700;
+      text-shadow: 0 0 5px #ffd700aa;
+    }
+
+    input[type="text"],
+    input[type="datetime-local"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 15px 20px;
+      border-radius: 50px;
+      border: none;
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+      background: #374151;
+      color: #f9fafb;
+      box-shadow: inset 2px 2px 6px #111827, inset -2px -2px 6px #4b5563;
+      transition: background-color 0.3s ease;
+      resize: vertical;
+      font-family: 'Quicksand', sans-serif;
+    }
+
+    input[type="text"]:focus,
+    input[type="datetime-local"]:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      background: #4b5563;
+      box-shadow: 0 0 8px #ffd700;
+    }
+
+    button {
+      background: #ffd700;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1rem;
+      color: #1f2937;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 10px #bfa71faa;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    button:hover {
+      background: #f1c40f;
+      transform: scale(1.05);
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin-top: 15px;
+    }
+
+    li {
+      background: #374151;
+      padding: 20px 25px;
+      border-radius: 15px;
+      margin-bottom: 15px;
+      box-shadow: 4px 4px 8px #111827, -4px -4px 8px #4b5563;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      transition: background-color 0.3s ease;
+    }
+
+    li.completed {
+      background: #1f2937;
+      color: #9ca3af;
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+
+    .task-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .task-text {
+      font-size: 1.3rem;
+      font-weight: 700;
+      flex: 1 1 auto;
+      word-wrap: break-word;
+    }
+
+    .priority {
+      font-weight: 700;
+      padding: 6px 15px;
+      border-radius: 30px;
+      user-select: none;
+      color: white;
+      min-width: 90px;
+      text-align: center;
+      box-shadow: 0 2px 5px #0008;
+    }
+
+    .priority.low {
+      background-color: #10b981; /* Green */
+      box-shadow: 0 4px 8px #059669aa;
+    }
+
+    .priority.medium {
+      background-color: #f59e0b; /* Amber */
+      box-shadow: 0 4px 8px #b45309aa;
+    }
+
+    .priority.high {
+      background-color: #ef4444; /* Red */
+      box-shadow: 0 4px 8px #b91c1caa;
+    }
+
+    .datetime {
+      font-size: 0.9rem;
+      background: #3b82f6;
+      padding: 5px 15px;
+      border-radius: 30px;
+      box-shadow: 0 2px 5px #2563ebaa;
+      user-select: none;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.05em;
+      align-self: flex-start;
+      margin-top: 0;
+    }
+
+    .notes {
+      background: #4b5563;
+      padding: 10px 15px;
+      border-radius: 12px;
+      font-style: italic;
+      color: #d1d5db;
+      white-space: pre-wrap;
+      line-height: 1.3;
+    }
+
+    .task-actions {
+      margin-top: 12px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .task-actions button {
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      width: auto;
+      box-shadow: 0 2px 8px #0003;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      user-select: none;
+      flex: none;
+    }
+
+    .task-actions button.complete-btn {
+      background: #10b981;
+      box-shadow: 0 4px 10px #059669aa;
+    }
+
+    .task-actions button.complete-btn:hover {
+      background: #059669;
+      transform: scale(1.1);
+    }
+
+    .task-actions button.edit-btn {
+      background: #3b82f6;
+      box-shadow: 0 4px 10px #2563ebaa;
+    }
+
+    .task-actions button.edit-btn:hover {
+      background: #2563eb;
+      transform: scale(1.1);
+    }
+
+    .task-actions button.delete-btn {
+      background: #ef4444;
+      box-shadow: 0 4px 10px #b91c1caa;
+    }
+
+    .task-actions button.delete-btn:hover {
+      background: #b91c1c;
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="todo-container">
+    <h1>To-Do List</h1>
+
+    <input type="text" id="taskInput" placeholder="Enter your task here..." />
+    <input type="datetime-local" id="taskDateTime" />
+    <select id="taskPriority" aria-label="Task Priority">
+      <option value="" disabled selected>Choose Priority</option>
+      <option value="low">Low Priority</option>
+      <option value="medium">Medium Priority</option>
+      <option value="high">High Priority</option>
+    </select>
+    <textarea id="taskNotes" rows="3" placeholder="Additional notes... (optional)"></textarea>
+
+    <button id="addTaskBtn">Add Task</button>
+    <ul id="taskList"></ul>
+  </div>
+
+  <script>
+    const taskInput = document.getElementById('taskInput');
+    const taskDateTime = document.getElementById('taskDateTime');
+    const taskPriority = document.getElementById('taskPriority');
+    const taskNotes = document.getElementById('taskNotes');
+    const addTaskBtn = document.getElementById('addTaskBtn');
+    const taskList = document.getElementById('taskList');
+
+    addTaskBtn.addEventListener('click', addTask);
+    taskInput.addEventListener('keypress', e => {
+      if (e.key === 'Enter') addTask();
+    });
+
+    function addTask() {
+      const taskText = taskInput.value.trim();
+      const dateTime = taskDateTime.value;
+      const priority = taskPriority.value;
+      const notes = taskNotes.value.trim();
+
+      if (!taskText) {
+        alert("Please enter a task.");
+        return;
+      }
+      if (!priority) {
+        alert("Please select a priority.");
+        return;
+      }
+
+      const li = document.createElement('li');
+
+      // Header with task text and priority pill
+      const header = document.createElement('div');
+      header.className = 'task-header';
+
+      const span = document.createElement('span');
+      span.classList.add('task-text');
+      span.textContent = taskText;
+
+      const prioritySpan = document.createElement('span');
+      prioritySpan.className = 'priority ' + priority;
+      prioritySpan.textContent = priority.charAt(0).toUpperCase() + priority.slice(1);
+
+      header.append(span, prioritySpan);
+
+      // Date/time display
+      const timeSpan = document.createElement('div');
+      timeSpan.classList.add('datetime');
+      if (dateTime) {
+        const dt = new Date(dateTime);
+        timeSpan.textContent = 'Due: ' + dt.toLocaleString();
+      } else {
+        timeSpan.style.display = 'none';
+      }
+
+      // Notes display
+      const notesDiv =
